@@ -25,5 +25,8 @@ namespace APIChallenge.Data
 
         [Required]
         public Empregado empregado { get; set; }
+
+        public ICollection<Membros> membros { get; set; }
+
     }
 }
