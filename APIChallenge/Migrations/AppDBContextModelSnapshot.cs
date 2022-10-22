@@ -23,9 +23,6 @@ namespace APIChallenge.Migrations
                         .ValueGeneratedOnAdd()
                         .HasColumnType("int");
 
-                    b.Property<int?>("Projetoid_projeto")
-                        .HasColumnType("int");
-
                     b.Property<string>("endereco")
                         .IsRequired()
                         .HasColumnType("longtext");
@@ -43,8 +40,6 @@ namespace APIChallenge.Migrations
                         .HasColumnType("longtext");
 
                     b.HasKey("id_empregado");
-
-                    b.HasIndex("Projetoid_projeto");
 
                     b.ToTable("Empregados");
 
@@ -88,18 +83,11 @@ namespace APIChallenge.Migrations
                         new
                         {
                             id_projeto = 1,
-                            data_de_criação = new DateTime(2022, 10, 20, 9, 36, 38, 338, DateTimeKind.Local).AddTicks(8227),
-                            data_temino = new DateTime(2022, 10, 20, 9, 36, 38, 339, DateTimeKind.Local).AddTicks(7720),
+                            data_de_criação = new DateTime(2022, 10, 20, 9, 22, 10, 764, DateTimeKind.Local).AddTicks(9674),
+                            data_temino = new DateTime(2022, 10, 20, 9, 22, 10, 766, DateTimeKind.Local).AddTicks(945),
                             gerente = 1,
                             nome = "Leonardo"
                         });
-                });
-
-            modelBuilder.Entity("APIChallenge.Data.Empregado", b =>
-                {
-                    b.HasOne("APIChallenge.Data.Projeto", null)
-                        .WithMany("empregados")
-                        .HasForeignKey("Projetoid_projeto");
                 });
 
             modelBuilder.Entity("APIChallenge.Data.Projeto", b =>
@@ -116,11 +104,6 @@ namespace APIChallenge.Migrations
             modelBuilder.Entity("APIChallenge.Data.Empregado", b =>
                 {
                     b.Navigation("projetos");
-                });
-
-            modelBuilder.Entity("APIChallenge.Data.Projeto", b =>
-                {
-                    b.Navigation("empregados");
                 });
 #pragma warning restore 612, 618
         }

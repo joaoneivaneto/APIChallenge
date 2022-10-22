@@ -1,6 +1,5 @@
 ﻿using Microsoft.EntityFrameworkCore;
 using System;
-using APIChallenge.Data;
 
 namespace APIChallenge.Data
 {
@@ -14,8 +13,6 @@ namespace APIChallenge.Data
         public DbSet<Empregado> Empregados { get; set; }
 
         public DbSet<Projeto> Projetos { get; set; }
-
-        public DbSet<Membros> Membros { get; set; }
         protected override void OnModelCreating( ModelBuilder modelBuilder)
         {
             modelBuilder.Entity<Empregado>().HasKey(k => k.id_empregado);
@@ -47,25 +44,10 @@ namespace APIChallenge.Data
             .WithMany(b => b.projetos)
             .HasForeignKey(p => p.gerente);
 
-            modelBuilder.Entity<Membros>()
-            .HasOne(p => p.empregado)
-            .WithMany(b => b.membros)
-            .HasForeignKey(p => p.id_empregado);
-
-            modelBuilder.Entity<Membros>()
-           .HasOne(p => p.projeto)
-           .WithMany(b => b.membros)
-           .HasForeignKey(p => p.id_projeto);
-
-            modelBuilder.Entity<Membros>().HasKey(k => k.id_projeto);
-            modelBuilder.Entity<Membros>().HasKey(k => k.id_empregado);
-
-          
-
+            
 
 
         }
-       
         
            
     }

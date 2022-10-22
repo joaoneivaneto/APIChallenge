@@ -24,8 +24,6 @@ namespace APIChallenge.Data
         [Required]
         public ICollection<Projeto> projetos { get; set; }
 
-        public ICollection<Membros> membros { get; set; }
-
-
+        
     }
 }
