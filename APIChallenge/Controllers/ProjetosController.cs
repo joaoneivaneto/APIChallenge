@@ -46,14 +46,19 @@ namespace APIChallenge.Controllers
         // PUT: api/Projetoes/5
         // To protect from overposting attacks, see https://go.microsoft.com/fwlink/?linkid=2123754
         [HttpPut("{id}")]
-        public async Task<IActionResult> PutProjeto(int id, Projeto projeto)
+        public async Task<IActionResult> PutProjeto(int id, CreateProjetoDTO request)
         {
-            if (id != projeto.id_projeto)
+            var empregado = await _context.Empregados.FindAsync(request.Gerente);
+            var UpdateProjeto = new Projeto
             {
-                return BadRequest();
-            }
+                id_projeto = id,
+                nome = request.Nome,
+                data_de_criação = request.Data_De_Criação,
+                data_temino = request.Data_Termino,
+                empregado = empregado,
+            };
 
-            _context.Entry(projeto).State = EntityState.Modified;
+            _context.Entry(UpdateProjeto).State = EntityState.Modified;
 
             try
             {
