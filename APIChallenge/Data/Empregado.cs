@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
+using System.Text.Json.Serialization;
 
 namespace APIChallenge.Data
 {
@@ -21,7 +22,7 @@ namespace APIChallenge.Data
         [Required]
         public string endereco { get; set; }
 
-        [Required]
+        [JsonIgnore]
         public ICollection<Projeto> projetos { get; set; }
 
         

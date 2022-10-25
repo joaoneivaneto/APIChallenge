@@ -6,6 +6,7 @@ using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using APIChallenge.Data;
+using APIChallenge.DTO;
 
 namespace APIChallenge.Controllers
 {
@@ -44,15 +45,25 @@ namespace APIChallenge.Controllers
         // PUT: api/Empregados/5
         // To protect from overposting attacks, see https://go.microsoft.com/fwlink/?linkid=2123754
         [HttpPut("{id}")]
-        public async Task<IActionResult> PutEmpregado(int id, Empregado empregado)
+        public async Task<IActionResult> PutEmpregado(int id, CreateEmpregadoDTO request)
         {
-            if (id != empregado.id_empregado)
+           
+
+            var UpdateEmpregado = new Empregado
             {
-                return BadRequest();
-            }
+                id_empregado = id,
+                primeiro_nome = request.Primeiro_Nome,
+                ultimo_nome = request.Ultimo_Nome,
+                telefone = request.Telefone,
+                endereco = request.Endereco,
+            };
 
-            _context.Entry(empregado).State = EntityState.Modified;
+            
 
+
+
+            _context.Entry(UpdateEmpregado).State = EntityState.Modified;
+            
             try
             {
                 await _context.SaveChangesAsync();
@@ -75,12 +86,20 @@ namespace APIChallenge.Controllers
         // POST: api/Empregados
         // To protect from overposting attacks, see https://go.microsoft.com/fwlink/?linkid=2123754
         [HttpPost]
-        public async Task<ActionResult<Empregado>> PostEmpregado(Empregado empregado)
+        public async Task<ActionResult<Empregado>> PostEmpregado(CreateEmpregadoDTO request)
         {
-            _context.Empregados.Add(empregado);
+            
+            var newEmpregado = new Empregado
+            {
+                primeiro_nome = request.Primeiro_Nome,
+                ultimo_nome = request.Ultimo_Nome,
+                telefone = request.Telefone,
+                endereco = request.Endereco,
+            };
+            _context.Empregados.Add(newEmpregado);
             await _context.SaveChangesAsync();
 
-            return CreatedAtAction("GetEmpregado", new { id = empregado.id_empregado }, empregado);
+            return CreatedAtAction("GetEmpregado", new { id = request.Id_Empregado   }, request);
         }
 
         // DELETE: api/Empregados/5

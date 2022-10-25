@@ -6,6 +6,8 @@ using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using APIChallenge.Data;
+using APIChallenge.DTO;
+using System.Diagnostics.CodeAnalysis;
 
 namespace APIChallenge.Controllers
 {
@@ -20,14 +22,14 @@ namespace APIChallenge.Controllers
             _context = context;
         }
 
-        // GET: api/Projetos
+        // GET: api/Projetoes
         [HttpGet]
         public async Task<ActionResult<IEnumerable<Projeto>>> GetProjetos()
         {
             return await _context.Projetos.ToListAsync();
         }
 
-        // GET: api/Projetos/5
+        // GET: api/Projetoes/5
         [HttpGet("{id}")]
         public async Task<ActionResult<Projeto>> GetProjeto(int id)
         {
@@ -41,7 +43,7 @@ namespace APIChallenge.Controllers
             return projeto;
         }
 
-        // PUT: api/Projetos/5
+        // PUT: api/Projetoes/5
         // To protect from overposting attacks, see https://go.microsoft.com/fwlink/?linkid=2123754
         [HttpPut("{id}")]
         public async Task<IActionResult> PutProjeto(int id, Projeto projeto)
@@ -72,18 +74,30 @@ namespace APIChallenge.Controllers
             return NoContent();
         }
 
-        // POST: api/Projetos
+        // POST: api/Projetoes
         // To protect from overposting attacks, see https://go.microsoft.com/fwlink/?linkid=2123754
         [HttpPost]
-        public async Task<ActionResult<Projeto>> PostProjeto(Projeto projeto)
+        public async Task<ActionResult<Projeto>> PostProjeto(CreateProjetoDTO request)
         {
-            _context.Projetos.Add(projeto);
+            var empregado = await _context.Empregados.FindAsync(request.Gerente);
+            if(empregado == null)
+            {
+                return NotFound();
+            }
+            var NewProjeto = new Projeto 
+            {
+                nome = request.Nome,
+                data_de_criação = request.Data_De_Criação,
+                data_temino = request.Data_Termino,
+                empregado =  empregado,
+            };
+            _context.Projetos.Add(NewProjeto);
             await _context.SaveChangesAsync();
 
-            return CreatedAtAction("GetProjeto", new { id = projeto.id_projeto }, projeto);
+            return CreatedAtAction("GetProjeto", new { id = request.Id_Projeto }, request);
         }
 
-        // DELETE: api/Projetos/5
+        // DELETE: api/Projetoes/5
         [HttpDelete("{id}")]
         public async Task<IActionResult> DeleteProjeto(int id)
         {

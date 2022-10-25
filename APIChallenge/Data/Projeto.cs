@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
 using System.Linq;
+using System.Text.Json.Serialization;
 using System.Threading.Tasks;
 
 namespace APIChallenge.Data
@@ -20,10 +21,10 @@ namespace APIChallenge.Data
        
         public DateTime? data_temino { get; set; }
 
-        [Required]
+       
         public int gerente { get; set; }
 
-        [Required]
+        [JsonIgnore]
         public Empregado empregado { get; set; }
     }
 }
