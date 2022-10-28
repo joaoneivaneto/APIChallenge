@@ -6,7 +6,6 @@ using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using APIChallenge.Data;
-using APIChallenge.DTO;
 
 namespace APIChallenge.Controllers
 {
@@ -30,11 +29,14 @@ namespace APIChallenge.Controllers
 
         // GET: api/Membros/5
         [HttpGet("{id}")]
-        public async Task<ActionResult<Membro>> GetMembro(int id)
+        public async Task<ActionResult<List<Membro>>> GetMembro(int id)
         {
-            var membro = await _context.membros.FindAsync(id);
-
-            if (membro == null)
+          
+            var membro = await _context.membros
+                 .Where(x => x.id_projeto == id)
+                 .ToListAsync();
+           
+            if (!MembroExists(id))
             {
                 return NotFound();
             }
@@ -44,55 +46,20 @@ namespace APIChallenge.Controllers
 
         // PUT: api/Membros/5
         // To protect from overposting attacks, see https://go.microsoft.com/fwlink/?linkid=2123754
-        [HttpPut("{id}")]
-        public async Task<IActionResult> PutMembro(int id, Membro membro)
-        {
-            if (id != membro.id_projeto)
-            {
-                return BadRequest();
-            }
-
-            _context.Entry(membro).State = EntityState.Modified;
-
-            try
-            {
-                await _context.SaveChangesAsync();
-            }
-            catch (DbUpdateConcurrencyException)
-            {
-                if (!MembroExists(id))
-                {
-                    return NotFound();
-                }
-                else
-                {
-                    throw;
-                }
-            }
-
-            return NoContent();
-        }
-
+        
         // POST: api/Membros
         // To protect from overposting attacks, see https://go.microsoft.com/fwlink/?linkid=2123754
         [HttpPost]
-        public async Task<ActionResult<Membro>> PostMembro(MembrosDTO request)
+        public async Task<ActionResult<Membro>> PostMembro(Membro membro)
         {
-            var empregado = await _context.Empregados.FindAsync(request.Id_Empregado);
-            var projeto = await _context.Projetos.FindAsync(request.Id_Projeto);
-            var newMembro = new Membro
-            {
-                empregado = empregado,
-                projeto = projeto,
-            };
-            _context.membros.Add(newMembro);
+            _context.membros.Add(membro);
             try
             {
                 await _context.SaveChangesAsync();
             }
             catch (DbUpdateException)
             {
-                if (MembroExists(request.Id_Projeto))
+                if (MembroExists(membro.id_empregado))
                 {
                     return Conflict();
                 }
@@ -102,28 +69,14 @@ namespace APIChallenge.Controllers
                 }
             }
 
-            return CreatedAtAction("GetMembro", new { id = request.Id_Projeto }, request);
+            return CreatedAtAction("GetMembro", new { id = membro.id_empregado }, membro);
         }
 
-        // DELETE: api/Membros/5
-        [HttpDelete("{id}")]
-        public async Task<IActionResult> DeleteMembro(int id)
-        {
-            var membro = await _context.membros.FindAsync(id);
-            if (membro == null)
-            {
-                return NotFound();
-            }
-
-            _context.membros.Remove(membro);
-            await _context.SaveChangesAsync();
-
-            return NoContent();
-        }
+        
 
         private bool MembroExists(int id)
         {
-            return _context.membros.Any(e => e.id_projeto == id);
+            return _context.membros.Any(e => e.id_empregado == id);
         }
     }
 }

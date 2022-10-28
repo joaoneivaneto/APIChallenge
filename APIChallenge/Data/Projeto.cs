@@ -27,6 +27,7 @@ namespace APIChallenge.Data
         [JsonIgnore]
         public Empregado empregado { get; set; }
 
+        [JsonIgnore]
         public ICollection<Membro> membros { get; set; }
     }
 }

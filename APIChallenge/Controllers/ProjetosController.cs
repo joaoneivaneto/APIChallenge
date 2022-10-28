@@ -57,6 +57,19 @@ namespace APIChallenge.Controllers
                 data_temino = request.Data_Termino,
                 empregado = empregado,
             };
+            if ( empregado == null)
+            {
+                throw new Exception("esse gerente não existe");
+            }
+            if (request.Nome == "google")
+            {
+                throw new Exception("esse nome não é permitido");
+            }
+
+            if(request.Data_De_Criação == request.Data_Termino)
+            {
+                throw new Exception("as datas de criação e termino do projeto são iguais");
+            }
 
             _context.Entry(UpdateProjeto).State = EntityState.Modified;
 

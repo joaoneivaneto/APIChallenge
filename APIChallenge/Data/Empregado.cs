@@ -22,7 +22,9 @@ namespace APIChallenge.Data
         [Required]
         public string endereco { get; set; }
 
+        [JsonIgnore]
         public ICollection<Membro> membros { get; set; }
+        [JsonIgnore]
         public ICollection<Projeto> projetos { get; set; }
 
         
