@@ -1,11 +1,12 @@
 ﻿
+using Microsoft.AspNetCore.Identity.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore;
 using System;
 
 
 namespace APIChallenge.Data
 {
-    public class AppDBContext : DbContext
+    public class AppDBContext : IdentityDbContext
     {
         public AppDBContext(DbContextOptions<AppDBContext> options): base(options)
         {
@@ -19,6 +20,8 @@ namespace APIChallenge.Data
         public DbSet<Membro> membros { get; set; }
         protected override void OnModelCreating( ModelBuilder modelBuilder)
         {
+            base.OnModelCreating(modelBuilder);
+
             modelBuilder.Entity<Empregado>().HasKey(k => k.id_empregado);
             modelBuilder.Entity<Empregado>().Property(p => p.telefone).HasMaxLength(10);
             modelBuilder.Entity<Empregado>().HasData(

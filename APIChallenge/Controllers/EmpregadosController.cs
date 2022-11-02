@@ -7,9 +7,11 @@ using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using APIChallenge.Data;
 using APIChallenge.DTO;
+using Microsoft.AspNetCore.Authorization;
 
 namespace APIChallenge.Controllers
 {
+    [Authorize]
     [Route("api/[controller]")]
     [ApiController]
     public class EmpregadosController : ControllerBase
@@ -20,7 +22,7 @@ namespace APIChallenge.Controllers
         {
             _context = context;
         }
-
+        
         // GET: api/Empregados
         [HttpGet]
         public async Task<ActionResult<IEnumerable<Empregado>>> GetEmpregados()
