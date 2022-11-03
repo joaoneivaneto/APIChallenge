@@ -6,9 +6,11 @@ using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using APIChallenge.Data;
+using Microsoft.AspNetCore.Authorization;
 
 namespace APIChallenge.Controllers
 {
+    [Authorize]
     [Route("api/[controller]")]
     [ApiController]
     public class MembrosController : ControllerBase
@@ -29,24 +31,26 @@ namespace APIChallenge.Controllers
 
         // GET: api/Membros/5
         [HttpGet("{id}")]
-        public async Task<ActionResult<List<Membro>>> GetMembro(int id)
+        public async Task<ActionResult<List<Membro>>> GetProjeto(int id)
         {
           
             var membro = await _context.membros
                  .Where(x => x.id_projeto == id)
                  .ToListAsync();
-           
-            if (!MembroExists(id))
+
+            if (ProjetoExists(id))
             {
-                return NotFound();
+                return membro;
             }
 
-            return membro;
+            return StatusCode(204, "ERRO!Relação Não encontrada");
+           
         }
 
-        // PUT: api/Membros/5
-        // To protect from overposting attacks, see https://go.microsoft.com/fwlink/?linkid=2123754
         
+
+   
+
         // POST: api/Membros
         // To protect from overposting attacks, see https://go.microsoft.com/fwlink/?linkid=2123754
         [HttpPost]
@@ -59,24 +63,29 @@ namespace APIChallenge.Controllers
             }
             catch (DbUpdateException)
             {
-                if (MembroExists(membro.id_empregado))
+                if (EmpregadoExists(membro.id_empregado) || ProjetoExists(membro.id_projeto))
                 {
-                    return Conflict();
+                    return StatusCode(409, "ERRO! Essa relação Ja existe");
                 }
                 else
                 {
-                    throw;
+                    return StatusCode(404, "ERRO!Dados Não Encontrados");
                 }
             }
 
-            return CreatedAtAction("GetMembro", new { id = membro.id_empregado }, membro);
+            return CreatedAtAction("GetProjeto", new { id = membro.id_empregado }, membro);
         }
 
         
 
-        private bool MembroExists(int id)
+        private bool EmpregadoExists(int id)
         {
             return _context.membros.Any(e => e.id_empregado == id);
         }
+        private bool ProjetoExists(int id)
+        {
+            return _context.membros.Any(e => e.id_projeto == id);
+        }
+
     }
 }

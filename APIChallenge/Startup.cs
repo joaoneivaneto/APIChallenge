@@ -52,10 +52,7 @@ namespace APIChallenge
                 c.SwaggerDoc("v1", new OpenApiInfo { Title = "APIChallenge", Version = "v1" });
             });
 
-             services.AddIdentityCore<IdentityUser>()
-                .AddRoles<IdentityRole>()
-                .AddEntityFrameworkStores<AppDBContext>()
-                .AddDefaultTokenProviders();
+             
 
             var appSettingsSection = Configuration.GetSection("AppSettings");
             services.Configure<AppSettings>(appSettingsSection);
@@ -93,7 +90,7 @@ namespace APIChallenge
                 app.UseSwaggerUI(c => c.SwaggerEndpoint("/swagger/v1/swagger.json", "APIChallenge v1"));
             }
 
-            //pp.UseAuthentication();
+            app.UseAuthentication();
             app.UseHttpsRedirection();
 
             app.UseRouting();

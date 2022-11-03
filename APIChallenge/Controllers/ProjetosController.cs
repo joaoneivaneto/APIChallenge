@@ -8,9 +8,11 @@ using Microsoft.EntityFrameworkCore;
 using APIChallenge.Data;
 using APIChallenge.DTO;
 using System.Diagnostics.CodeAnalysis;
+using Microsoft.AspNetCore.Authorization;
 
 namespace APIChallenge.Controllers
 {
+    [Authorize]
     [Route("api/[controller]")]
     [ApiController]
     public class ProjetosController : ControllerBase
@@ -37,7 +39,7 @@ namespace APIChallenge.Controllers
 
             if (projeto == null)
             {
-                return NotFound();
+                return StatusCode(404, "Projeto Não Encontrado");
             }
 
             return projeto;
@@ -59,16 +61,16 @@ namespace APIChallenge.Controllers
             };
             if ( empregado == null)
             {
-                throw new Exception("esse gerente não existe");
+                return StatusCode(404, "O Gerente não foi encontrado");
             }
             if (request.Nome == "google")
             {
-                throw new Exception("esse nome não é permitido");
+                return StatusCode(203,"esse nome não é permitido");
             }
 
             if(request.Data_De_Criação == request.Data_Termino)
             {
-                throw new Exception("as datas de criação e termino do projeto são iguais");
+                return StatusCode(203, "as datas de criação e termino do projeto são iguais");
             }
 
             _context.Entry(UpdateProjeto).State = EntityState.Modified;
@@ -81,7 +83,7 @@ namespace APIChallenge.Controllers
             {
                 if (!ProjetoExists(id))
                 {
-                    return NotFound();
+                    return StatusCode(404, "Projeto Não Encontrado");
                 }
                 else
                 {
@@ -89,7 +91,7 @@ namespace APIChallenge.Controllers
                 }
             }
 
-            return NoContent();
+            return CreatedAtAction("GetProjeto", new { id = request.Id_Projeto }, request);
         }
 
         // POST: api/Projetoes
@@ -100,7 +102,7 @@ namespace APIChallenge.Controllers
             var empregado = await _context.Empregados.FindAsync(request.Gerente);
             if(empregado == null)
             {
-                return NotFound();
+                return StatusCode(404, "O Gerente não foi encontrado");
             }
             var NewProjeto = new Projeto 
             {
@@ -122,7 +124,7 @@ namespace APIChallenge.Controllers
             var projeto = await _context.Projetos.FindAsync(id);
             if (projeto == null)
             {
-                return NotFound();
+                return StatusCode(404, "O projeto não foi encontrado");
             }
 
             _context.Projetos.Remove(projeto);

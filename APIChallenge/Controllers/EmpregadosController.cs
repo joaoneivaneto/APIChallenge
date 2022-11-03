@@ -38,7 +38,7 @@ namespace APIChallenge.Controllers
 
             if (empregado == null)
             {
-                return NotFound();
+                return StatusCode(404, "O Empregado não foi encontrado");
             }
 
             return empregado;
@@ -74,7 +74,7 @@ namespace APIChallenge.Controllers
             {
                 if (!EmpregadoExists(id))
                 {
-                    return NotFound();
+                    return StatusCode(404, "O Empregado não foi encontrado");
                 }
                 else
                 {
@@ -82,7 +82,8 @@ namespace APIChallenge.Controllers
                 }
             }
 
-            return NoContent();
+            return CreatedAtAction("GetEmpregado", new { id = request.Id_Empregado }, request);
+
         }
 
         // POST: api/Empregados
@@ -111,7 +112,7 @@ namespace APIChallenge.Controllers
             var empregado = await _context.Empregados.FindAsync(id);
             if (empregado == null)
             {
-                return NotFound();
+                return StatusCode(404, "O Empregado não foi encontrado");
             }
 
             _context.Empregados.Remove(empregado);
