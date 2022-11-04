@@ -9,6 +9,7 @@ using System;
 using System.Globalization;
 using System.IdentityModel.Tokens.Jwt;
 using System.Linq;
+using System.Security.Claims;
 using System.Text;
 using System.Threading.Tasks;
 
@@ -73,11 +74,15 @@ namespace APIChallenge.Controllers
         {
             var user = await _userManager.FindByNameAsync(email);
 
+            var identityClaims = new ClaimsIdentity();
+            identityClaims.AddClaims( await _userManager.GetClaimsAsync(user));
+
             var tokenHanbler = new JwtSecurityTokenHandler();
             var key = Encoding.ASCII.GetBytes(_appSettings.Secret);
 
             var tokenDescriptor = new SecurityTokenDescriptor
             {
+                Subject = identityClaims,
                 Issuer = _appSettings.Emissor,
                 Audience = _appSettings.ValidoEm,
                 Expires = DateTime.UtcNow.AddHours(_appSettings.ExpiracaoHoras),

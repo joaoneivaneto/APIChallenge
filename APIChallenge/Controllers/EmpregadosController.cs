@@ -11,6 +11,7 @@ using Microsoft.AspNetCore.Authorization;
 
 namespace APIChallenge.Controllers
 {
+
     [Authorize]
     [Route("api/[controller]")]
     [ApiController]
@@ -44,6 +45,7 @@ namespace APIChallenge.Controllers
             return empregado;
         }
 
+        [ClaimsAuthorize("Empregado","Editar")]
         // PUT: api/Empregados/5
         // To protect from overposting attacks, see https://go.microsoft.com/fwlink/?linkid=2123754
         [HttpPut("{id}")]
@@ -86,6 +88,7 @@ namespace APIChallenge.Controllers
 
         }
 
+        [ClaimsAuthorize("Empregado", "Incluir")]
         // POST: api/Empregados
         // To protect from overposting attacks, see https://go.microsoft.com/fwlink/?linkid=2123754
         [HttpPost]
@@ -104,7 +107,7 @@ namespace APIChallenge.Controllers
 
             return CreatedAtAction("GetEmpregado", new { id = request.Id_Empregado   }, request);
         }
-
+        [ClaimsAuthorize("Empregado", "Excluir")]
         // DELETE: api/Empregados/5
         [HttpDelete("{id}")]
         public async Task<IActionResult> DeleteEmpregado(int id)
